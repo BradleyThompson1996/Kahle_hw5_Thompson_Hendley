@@ -7,10 +7,37 @@ output: pdf_document
 
 ```{r setup, echo=FALSE, results=TRUE}
 knitr::opts_chunk$set(error=TRUE, dev="cairo_pdf")
+library(tidyverse)
 ```
 
 ```{r, echo = FALSE}
-#old code brad needs for linear stuff
+#dot
+dot <- function(x, y){
+  if (length(x) != length(y)) stop("vectors `x` and `y` are not of the same length.")
+  # loop over the vector, accumulating the inner product
+  out <- 0 
+  for (i in seq_along(x)) out <- out + x[i]*y[i]# return inner product
+  out
+}
+
+#norm 
+norm <- function(x) sqrt(dot(x, x))
+
+#normalize
+normalize <- function(x) x / norm(x)
+
+#is zero
+is.zero <- function(x) norm(x) < sqrt(.Machine$double.eps)
+
+#projection
+project_onto <- function(y, x, normalized_x = FALSE){
+  stopifnot(length(x) == length(y))
+  if (is.zero(x)) return(rep(0, length(x)))
+  if (normalized_x) dot(y, x) * x else dot(y, x) / dot(x, x) * x
+  
+#discard zero cols
+discard_zero_cols <- function(M) M[,!apply(M, 2, is.zero)]
+}
 ```
 
 1)
@@ -20,7 +47,23 @@ knitr::opts_chunk$set(error=TRUE, dev="cairo_pdf")
 
 2)
 ```{r}
-#code for question 2
+mgs <- function(A){
+  #skeleton of Q and define a_i
+  Q <- matrix(0, nrow = nrow(A), ncol = ncol(A))
+  a_i <- A[, i]
+  
+  #getting Q
+  for(i in seq_along(ncol(Q))){
+    Q[, i] <- normalize(a_i)
+    #checking for 0 cols
+    if(a_i != 0){
+      for(j in (i+1):ncol(Q)){
+        a_i <- a_i - project_onto(A[j, ], Q[, i])
+      }
+    }
+  }
+  discard_zero_cols(Q)
+}
 ```
 
 3)
