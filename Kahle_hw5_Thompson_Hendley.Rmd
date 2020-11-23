@@ -83,6 +83,8 @@ gs <- function(A){
 
 2)
 ```{r}
+#need to figure out either why doesn't go back into for loop
+#or why the rest of the columns are 0's
 mgs <- function(A){
   #skeleton of Q and define ai = (a_i)
   Q <- matrix(0, nrow = nrow(A), ncol = ncol(A))
