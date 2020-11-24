@@ -45,23 +45,23 @@ normalize <- function(x) x / norm(x)
 is.zero <- function(x) norm(x) < sqrt(.Machine$double.eps)
 
 #projection
-project_onto <- function(y,x){
-  projection <- c(1:length(x))
-  if(is.zero(x)){
-    for(i in 1:length(x)){
-      projection[i] <- 0
-    }
-  }
-  else{
-    projection <- dot(y,x)/dot(x,x)*x
-  }
-  projection
-}
-# project_onto <- function(y, x, normalized_x = FALSE){
-#   stopifnot(length(x) == length(y))
-#   if (is.zero(x)) return(rep(0, length(x)))
-#   if (normalized_x) dot(y, x) * x else dot(y, x) / dot(x, x) * x
+# project_onto <- function(y,x){
+#   projection <- c(1:length(x))
+#   if(is.zero(x)){
+#     for(i in 1:length(x)){
+#       projection[i] <- 0
+#     }
+#   }
+#   else{
+#     projection <- dot(y,x)/dot(x,x)*x
+#   }
+#   projection
 # }
+project_onto <- function(y, x, normalized_x = FALSE){
+  stopifnot(length(x) == length(y))
+  if (is.zero(x)) return(rep(0, length(x)))
+  if (normalized_x) dot(y, x) * x else dot(y, x) / dot(x, x) * x
+}
 #discard zero cols
 discard_zero_cols <- function(M) M[,!apply(M, 2, is.zero)]
 
@@ -77,7 +77,7 @@ gs <- function(A){
     # subtract parallel components
     for (k in 1L:(j-1L)){
       e_tilde <- e_tilde - project_onto(e_tilde, e[,k]
-                                        #, normalized_x = TRUE
+                                        , normalized_x = TRUE
                                         )
       }
     # normalize
@@ -94,11 +94,33 @@ gs <- function(A){
 ## Number 2
 ```{r}
 mgs <- function(A){
-
+  #make skipping vector
+  skip_vector <- vector(mode = "integer", length = ncol(A))
+  for(i in 1:ncol(A)){
+    #normalize
+    if(!is.zero(A[, i])){
+      A[, i] <- normalize(A[, i])
+    }
+    #subtract projections
+    if(i != ncol(A)){
+      for(j in (i + 1):ncol(A)){
+        #check if in skip vector
+        if(j %in% skip_vector){
+          break()
+        } else {
+          A[, j] <- A[, j] - project_onto(A[, j], A[, i])
+          if(is.zero(A[, j])){
+            skip_vector[j] <- j
+          }
+        }
+      }
+    }
+  }
+  discard_zero_cols(A)
 }
 
 #testing
-A <- matrix(c(1, 6, 19, 2,1, 2,  7, 3,5, 6, 23, 2), nrow = 3, byrow = TRUE)
+A <- matrix(c(1, 6, 19, 2, 1, 2,  7, 3, 5, 6, 23, 2), nrow = 3, byrow = TRUE)
 gs(A)
 mgs(A)
 ```
