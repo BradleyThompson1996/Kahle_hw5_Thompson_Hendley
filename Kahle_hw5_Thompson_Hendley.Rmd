@@ -150,30 +150,44 @@ array_to_tibble(a)
 ```{r Num4}
 library(tibble)
 
-# spy <- function(mat) {
-#   this is brad talking, but maybe its like df <- array_to_tibble(mat)
-#   then just do ur basecase but with the df and then for x and y it'd
-#   be aes(df$i1, df$i2) and you'd fill the squares with the 
-#   values fromdf$i3 ? also i'm gonna need you to talk me through the
-#   this function at somepoint lol cause idek how that works just from
-#   looking at it. oh also yeah put the library for brewer.pal up in the
-#   first code chunk with tidyverse and purrr cause rn for me ur 
-#   number 1 code throws an error
-# }
+# The spy function takes as arguments the generated matrix along with the
+# number of rows and columns (n) of the square matrix.
+spy <- function(mat, n) {
+  non_zero_row = c()
+  non_zero_col = c()
 
-# n <-  50
-# mat <- matrix(0L, nrow = n, ncol = n)
-# set.seed(2L)
-# mat[sample(n^2, n)] <- rpois(n, 5)
+# Searches through matrix and notes the indices of non-zero elements
+  for (i in 1:n) {
+    for (j in 1:n) {
+      if (mat[i, j] != 0) {
+        non_zero_row = c(non_zero_row, i)
+        non_zero_col = c(non_zero_col, j)
+      }
+    }
+  }
+  # Due to the way R orients the coordinate system, this code
+  # calibrates things to output in the desired way
+  x_plot <- non_zero_col # col is distance from left
+  y_plot <- n - non_zero_row # row is distance from top
 
-n <- 10
+  tibble(x = x_plot, y = y_plot)
+}
 
-df <- tibble(
-  x = 1:10,
-  y = 10:1
-)
+n <-  50
+mat <- matrix(0L, nrow = n, ncol = n)
+set.seed(2L)
+mat[sample(n^2, n)] <- rpois(n, 5)
+
+# Calls the spy function to create the tibble to be plotted
+df <- spy(mat, n)
+
+# Uncomment the next two lines and comment all the above to test
+# the base case.
+# n <- 10
+# df <- tibble(x = 1:10, y = 10:1)
 
 ggplot(df, aes(x, y)) +
+  # Creats the black box around the plot
   geom_rect(aes(xmin = 0.5, xmax = n + 0.5, 
             ymin = 0.5, ymax = n + 0.5), 
             fill = "white", color = "black", size = 0.2) +
