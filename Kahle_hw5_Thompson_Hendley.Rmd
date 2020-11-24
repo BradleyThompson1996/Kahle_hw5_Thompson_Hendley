@@ -10,6 +10,21 @@ knitr::opts_chunk$set(error=TRUE, dev="cairo_pdf")
 library(tidyverse)
 ```
 
+## Number 1
+``` {r Num1}
+# Takes the basic color palette and spreads it into 50 colors
+expand_palette <- function(n, colors) {
+  spread <- colorRampPalette(colors)
+  spread(n)
+}
+
+colors <- brewer.pal(9, "Spectral")
+more_colors <- expand_palette(50, colors)
+show_col(more_colors, labels = FALSE)
+```
+
+
+## Number 2
 ```{r, echo = FALSE}
 #dot
 dot <- function(x, y){
