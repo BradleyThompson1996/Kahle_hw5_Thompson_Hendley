@@ -129,7 +129,14 @@ array_to_tibble(a)
 library(tibble)
 
 # spy <- function(mat) {
-#   
+#   this is brad talking, but maybe its like df <- array_to_tibble(mat)
+#   then just do ur basecase but with the df and then for x and y it'd
+#   be aes(df$i1, df$i2) and you'd fill the squares with the 
+#   values fromdf$i3 ? also i'm gonna need you to talk me through the
+#   this function at somepoint lol cause idek how that works just from
+#   looking at it. oh also yeah put the library for brewer.pal up in the
+#   first code chunk with tidyverse and purrr cause rn for me ur 
+#   number 1 code throws an error
 # }
 
 # n <-  50
@@ -152,6 +159,5 @@ ggplot(df, aes(x, y)) +
   scale_x_continuous(name = NULL, breaks = NULL, minor_breaks = NULL) +
   scale_y_continuous(name = NULL, breaks = NULL, minor_breaks = NULL) +
   coord_equal()
-
 ```
 
