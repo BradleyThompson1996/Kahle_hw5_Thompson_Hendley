@@ -8,6 +8,7 @@ output: pdf_document
 ```{r setup, echo=FALSE, results=TRUE}
 knitr::opts_chunk$set(error=TRUE, dev="cairo_pdf")
 library(tidyverse)
+library(purrr)
 ```
 
 ## Number 1
@@ -24,7 +25,6 @@ show_col(more_colors, labels = FALSE)
 ```
 
 
-## Number 2
 ```{r, echo = FALSE}
 #dot
 dot <- function(x, y){
@@ -91,33 +91,10 @@ gs <- function(A){
 }
 ```
 
-1)
+## Number 2
 ```{r}
-#code for question 1
-```
-
-2)
-```{r}
-#need to figure out either why doesn't go back into for loop
-#or why the rest of the columns are 0's
 mgs <- function(A){
-  #skeleton of Q and define ai = (a_i)
-  Q <- matrix(0, nrow = nrow(A), ncol = ncol(A))
-  ai <- A[, 1]
-  
-  #getting Q
-  for(i in seq_along(ncol(Q))){
-    Q[, i] <- normalize(ai)
-    #checking for 0 cols
-    if(norm(ai) != 0 & i != ncol(Q)){
-      #redefining a_i
-      for(j in (i+1):ncol(Q)){
-        ai <- ai - project_onto(A[, j], Q[, i])
-      }
-    }
-  }
-  #return
-  discard_zero_cols(Q)
+
 }
 
 #testing
@@ -126,9 +103,25 @@ gs(A)
 mgs(A)
 ```
 
-3)
+## Number 3
 ```{r}
-#code for 3
+#array to tibble 
+array_to_tibble <- function(a){
+  df <- a %>% 
+  dim() %>% 
+  map(~ 1:.x) %>% 
+  expand.grid() %>% 
+  as_tibble()
+names(df) <- paste0("i", 1:length(dim(a)))
+df$value <- as.vector(a)
+df
+}
+
+#testing
+mat <- matrix(1:6, nrow = 2)
+array_to_tibble(mat)
+a <- array(1:24, dim = c(2, 4, 3))
+array_to_tibble(a)
 ```
 
 ## Number 4
