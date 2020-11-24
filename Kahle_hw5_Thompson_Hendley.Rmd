@@ -8,6 +8,8 @@ output: pdf_document
 ```{r setup, echo=FALSE, results=TRUE}
 knitr::opts_chunk$set(error=TRUE, dev="cairo_pdf")
 library(tidyverse)
+library(scales)
+library(RColorBrewer)
 library(purrr)
 ```
 
@@ -148,8 +150,6 @@ array_to_tibble(a)
 
 ## Number 4
 ```{r Num4}
-library(tibble)
-
 # The spy function takes as arguments the generated matrix along with the
 # number of rows and columns (n) of the square matrix.
 spy <- function(mat, n) {
