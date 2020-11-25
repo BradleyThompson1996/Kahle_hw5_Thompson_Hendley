@@ -174,7 +174,7 @@ spy <- function(mat) {
   df <- tibble(x = x_plot, y = y_plot)
   
   ggplot(df, aes(x, y)) +
-  # Creats the black box around the plot
+  # Creates the black box around the plot
   geom_rect(aes(xmin = 0, xmax = n , 
             ymin = 0, ymax = n), 
             fill = "white", color = "black", size = 0.2) +
@@ -185,12 +185,14 @@ spy <- function(mat) {
   theme_minimal()
 }
 
+#testing
 n <-  50
 mat <- matrix(0L, nrow = n, ncol = n)
 set.seed(2L)
 mat[sample(n^2, n)] <- rpois(n, 5)
 
 # Calls the spy function to create the tibble to be plotted
-df <- spy(mat)
+spy(mat)
+
 ```
 
