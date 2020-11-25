@@ -152,7 +152,8 @@ array_to_tibble(a)
 ```{r Num4}
 # The spy function takes as arguments the generated matrix along with the
 # number of rows and columns (n) of the square matrix.
-spy <- function(mat, n) {
+spy <- function(mat) {
+  n <- nrow(mat)
   non_zero_row = c()
   non_zero_col = c()
 
@@ -170,23 +171,9 @@ spy <- function(mat, n) {
   x_plot <- non_zero_col # col is distance from left
   y_plot <- n - non_zero_row # row is distance from top
 
-  tibble(x = x_plot, y = y_plot)
-}
-
-n <-  50
-mat <- matrix(0L, nrow = n, ncol = n)
-set.seed(2L)
-mat[sample(n^2, n)] <- rpois(n, 5)
-
-# Calls the spy function to create the tibble to be plotted
-df <- spy(mat, n)
-
-# Uncomment the next two lines and comment all the above to test
-# the base case.
-# n <- 10
-# df <- tibble(x = 1:10, y = 10:1)
-
-ggplot(df, aes(x, y)) +
+  df <- tibble(x = x_plot, y = y_plot)
+  
+  ggplot(df, aes(x, y)) +
   # Creats the black box around the plot
   geom_rect(aes(xmin = 0, xmax = n , 
             ymin = 0, ymax = n), 
@@ -196,5 +183,14 @@ ggplot(df, aes(x, y)) +
   scale_y_continuous(name = NULL, breaks = NULL, minor_breaks = NULL) +
   coord_equal()+
   theme_minimal()
+}
+
+n <-  50
+mat <- matrix(0L, nrow = n, ncol = n)
+set.seed(2L)
+mat[sample(n^2, n)] <- rpois(n, 5)
+
+# Calls the spy function to create the tibble to be plotted
+df <- spy(mat)
 ```
 
